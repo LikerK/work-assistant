@@ -11,7 +11,9 @@ import { getDatabase, ref, onValue } from "firebase/database";
 import { initializeApp } from "firebase/app";
 import Schedule from './Schedule.jsx';
 import Students from './Students.jsx';
+import LoginPage from './LoginPage.jsx';
 import Salary from './Salary.jsx';
+import SignUp from './SignUpPage.jsx';
 import store from '../slices/index.js';
 import { actions as studentsActions } from '../slices/students';
 import { actions as lessonsActions } from '../slices/lessons';
@@ -62,9 +64,11 @@ const App = () => {
           <div className="overflow-hidden h-100 d-flex flex-column">
             <NavbarMenu />
             <Routes>
-              <Route path="/" element={<Schedule />} />
-              <Route path="students" element={<Students />} />
-              <Route path="salary" element={<Salary />} />
+              <Route path="/" element={ <Schedule /> } />
+              <Route path="students" element={ <Students /> } />
+              <Route path="salary" element={ <Salary /> } />
+              <Route path='login' element={ <LoginPage /> } />
+              <Route path='signup' element={ <SignUp /> } />
             </Routes>
           </div>
         </BrowserRouter>
