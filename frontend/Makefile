@@ -1,2 +1,2 @@
-start:
+start-frontend:
 	npm start

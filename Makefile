@@ -1,2 +1,2 @@
-start-frontend:
-	make -C frontend start
+start:
+	make -C frontend start-frontend
