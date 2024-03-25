@@ -5,9 +5,12 @@ import React, { useState, useRef } from 'react';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
-import { getDatabase, ref, set } from "firebase/database";
+import { ref, set, push, getDatabase } from "firebase/database";
+import { useAuth } from '../../hooks/index.js';
+import { useBd } from '../../hooks/index.js';
 import { closeModal } from '../../slices/modals';
 import getSchedule from '../../util.js';
+import { db } from '../../firebase.js';
 
 const AddLessonForm = ({ formik, id }) => {
   return (
@@ -27,28 +30,29 @@ const AddLessonForm = ({ formik, id }) => {
           <option value="4">Четверг</option>
           <option value="5">Пятница</option>
           <option value="6">Суббота</option>
-          <option value="7">Воскресенье</option>
+          <option value="0">Воскресенье</option>
         </Form.Select>
       </Form.Group>
       <Form.Group className="mx-1">
-          <Form.Control
-            size="sm"
-            type="time"
-            name={`lessons[${id}].time`}
-            placeholder="Часы"
-            onChange={formik.handleChange}
-            value={formik.values.hours}
-          />
-        </Form.Group>
+        <Form.Control
+          size="sm"
+          type="time"
+          name={`lessons[${id}].time`}
+          placeholder="Часы"
+          onChange={formik.handleChange}
+          value={formik.values.hours}
+        />
+      </Form.Group>
     </div>
   )
 };
 
 const ModalStudent = () => {
+  const auth = useAuth();
   const [countLessons, setCountLessons] = useState(1);
   const arrayLessons = [...Array(countLessons).keys()];
   const dispatch = useDispatch();
-  const lastId = useSelector((state) => state.lessons.lastId);
+  const lastId = 0;
   const setCloseModal = () => dispatch(closeModal());
 
   const inputElement = useRef();
@@ -66,20 +70,25 @@ const ModalStudent = () => {
       startLessons: '',
       finishLessons: '',
       price: '',
-      lessons: [{ id: 0, time: '', day: '', minutes: '', hours: '' }],
+      lessons: [{ id: 0, time: '', day: '', minutes: '', hours: '', type: '' }],
     },
     validationSchema,
     validateOnChange: false,
     onSubmit: (values) => {
-      const db = getDatabase();
-      set(ref(db, 'users/' + values.name), getSchedule(values, lastId));
+      try {
+        console.log(getSchedule(values, lastId));
+        // set(ref(db, '/users/' + auth.user.uid), getSchedule(values, lastId));
+      }
+      catch (e) {
+        console.log(e);
+      }
     }
   });
 
   const handleLessons = (id, type) => {
     if (type === 'add') {
       setCountLessons(countLessons + 1);
-      formik.values.lessons.push({ id: id, time:'', day: '', minutes: '', hours: '' });
+      formik.values.lessons.push({ id: id, time: '', day: '', minutes: '', hours: '' });
     }
     else if (type === 'remove') {
       setCountLessons(countLessons - 1);
@@ -109,8 +118,8 @@ const ModalStudent = () => {
             />
           </FormGroup>
           <FormGroup className="my-1">
-            <Form.Label htmlFor="name">Цена одного урока</Form.Label>
-            <FormControl
+            <Form.Label htmlFor="type">Тип группы</Form.Label>
+            {/* <FormControl
               ref={inputElement}
               id="price"
               name="price"
@@ -119,7 +128,18 @@ const ModalStudent = () => {
               value={formik.values.price}
               data-testid="input-body"
               isInvalid={formik.touched.price && formik.errors.price}
-            />
+            /> */}
+            <Form.Select
+              size="s"
+              name="type"
+              id="type"
+              onChange={formik.handleChange}
+              aria-label="День недели"
+            >
+              <option value="absentia">Заочно</option>
+              <option value="group">Группа</option>
+              <option value="one">Мастер класс</option>
+            </Form.Select>
           </FormGroup>
           <hr />
           <span>Дата начала и конца обучения</span>
