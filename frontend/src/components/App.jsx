@@ -9,7 +9,6 @@ import {
 import { createContext } from 'react';
 import _ from 'lodash';
 import { Provider } from 'react-redux';
-import { getDatabase, ref, onValue } from "firebase/database";
 import Students from './Students.jsx';
 import Main from './Main.jsx';
 import LoginPage from './LoginPage.jsx';
@@ -22,12 +21,11 @@ import { actions as studentsActions } from '../slices/students';
 import { actions as lessonsActions } from '../slices/lessons';
 
 
-const PrivateRoute = () => {
+const PrivateRoute = ( { children } ) => {
   const auth = useAuth();
   const location = useLocation();
-  const toNavigate = auth.user ? '/' : 'login';
   return (
-    <Navigate to={toNavigate} state={{ from: location }} />
+    auth.user ? children : <Navigate to='login' state={{ from: location }} />
   );
 };
 
@@ -38,11 +36,14 @@ const App = () => {
         <div className="overflow-hidden h-100 d-flex flex-column">
           <NavbarMenu />
           <Routes>
-            <Route element={<PrivateRoute />}>
-              <Route path="/" element={<Main />} />
-              <Route path="students" element={<Students />} />
-              <Route path="salary" element={<Salary />} />
-            </Route>
+            <Route
+              path='/'
+              element={(
+                <PrivateRoute>
+                  <Main />
+                </PrivateRoute>
+              )} />
+            <Route path='students' element={<Students />} />
             <Route path='login' element={<LoginPage />} />
             <Route path='signup' element={<SignUp />} />
           </Routes>

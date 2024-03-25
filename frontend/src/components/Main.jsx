@@ -2,11 +2,16 @@ import Alert from 'react-bootstrap/Alert';
 import cn from 'classnames';
 import { useSelector } from 'react-redux';
 import { Button } from 'react-bootstrap';
+import { ref, onValue, getDatabase } from "firebase/database";
 import { selectors } from '../slices/lessons';
+import { useBd } from '../hooks';
+import { useAuth } from '../hooks';
 import { ReactComponent as CopyIcon } from '../assets/copy.svg';
+import { useEffect } from 'react';
+import '../firebase.js';
 
 
-// const starCountRef = ref(db, 'users/'); // вынести все в отдельный модуль, где будет прослушка событий приложения
+// const starCountRef = ref(db, 'users/'); // useEffect one
 
 // onValue(starCountRef, (snapshot) => {
 //   const students = snapshot.val();
@@ -28,11 +33,20 @@ import { ReactComponent as CopyIcon } from '../assets/copy.svg';
 // });
 
 
-const copyText = (text) => {
-  navigator.clipboard.writeText(text);
-};
+const Main = () => {
+  const auth = useAuth();
+  const db = getDatabase();
+  const copyText = (text) => {
+    navigator.clipboard.writeText(text);
+  };
 
-const Schedule = () => {
+  useEffect(() => {
+    const starCountRef = ref(db, 'users/' + auth.user.uid);
+    onValue(starCountRef, (snapshot) => {
+      console.log(snapshot.val());
+    });
+  }, [auth.user.uid, db]);
+
   const lessons = useSelector(selectors.selectAll);
   const date = new Date();
 
@@ -91,8 +105,6 @@ const Schedule = () => {
         </Alert>
       </div>
     </div>
+)};
 
-  )
-}
-
-export default Schedule;
+export default Main;
