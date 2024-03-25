@@ -4,15 +4,6 @@ import { showModal } from '../slices/modals';
 import ModalStudent from './Modal.jsx'
 import { selectors } from '../slices/students';
 
-// function writeUserData(userId, name, email, imageUrl) {
-//   const db = getDatabase();
-//   set(ref(db, 'users/' + userId), {
-//     username: name,
-//     email: email,
-//     profile_picture : imageUrl
-//   });
-// }
-
 const Students = () => {
   const dispatch = useDispatch();
   const students = useSelector(selectors.selectAll);
