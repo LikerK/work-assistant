@@ -33,7 +33,7 @@ const App = () => {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <div className="overflow-hidden h-100 d-flex flex-column">
+        <div className=" main overflow-hidden h-100 d-flex flex-column">
           <NavbarMenu />
           <Routes>
             <Route

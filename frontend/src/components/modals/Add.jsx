@@ -5,12 +5,15 @@ import React, { useState, useRef } from 'react';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
-import { ref, set, push, getDatabase } from "firebase/database";
+import { ref, set, push, getDatabase, update, on } from "firebase/database";
 import { useAuth } from '../../hooks/index.js';
 import { useBd } from '../../hooks/index.js';
+import { actions as studentsActions } from '../../slices/students';
+import { actions as lessonsActions } from '../../slices/lessons';
 import { closeModal } from '../../slices/modals';
 import getSchedule from '../../util.js';
 import { db } from '../../firebase.js';
+import _  from 'lodash';
 
 const AddLessonForm = ({ formik, id }) => {
   return (
@@ -68,7 +71,6 @@ const ModalStudent = () => {
     initialValues: {
       name: '',
       startLessons: '',
-      finishLessons: '',
       price: '',
       lessons: [{ id: 0, time: '', day: '', minutes: '', hours: '', type: '' }],
     },
@@ -76,8 +78,23 @@ const ModalStudent = () => {
     validateOnChange: false,
     onSubmit: (values) => {
       try {
-        console.log(getSchedule(values, lastId));
-        // set(ref(db, '/users/' + auth.user.uid), getSchedule(values, lastId));
+        const lessonsRef = ref(db, `users/${auth.user.uid}/${values.name}/lessons`);
+        const lessonsArray = getSchedule(values, lastId);
+        const lessons = lessonsArray.map((lesson) => {
+          const newLessonRef = push(lessonsRef);
+          const newLesson = {
+            id: newLessonRef.key,
+            lessonDate: lesson.lessonDate,
+            name: values.name,
+            price: '',
+            passed: true
+          };
+          set(newLessonRef, newLesson);
+          return newLesson;
+        });
+        const student = { id:_.uniqueId(), name: values.name, lessons: lessons };
+        dispatch(studentsActions.addStudent(student));
+        dispatch(lessonsActions.addLessons(lessons));
       }
       catch (e) {
         console.log(e);
@@ -90,7 +107,7 @@ const ModalStudent = () => {
       setCountLessons(countLessons + 1);
       formik.values.lessons.push({ id: id, time: '', day: '', minutes: '', hours: '' });
     }
-    else if (type === 'remove') {
+    else if (type === 'remove' && countLessons > 1) {
       setCountLessons(countLessons - 1);
       const newLessons = formik.values.lessons.filter((lesson) => lesson.id !== id);
       formik.values.lessons = newLessons;
@@ -119,16 +136,6 @@ const ModalStudent = () => {
           </FormGroup>
           <FormGroup className="my-1">
             <Form.Label htmlFor="type">Тип группы</Form.Label>
-            {/* <FormControl
-              ref={inputElement}
-              id="price"
-              name="price"
-              type="text"
-              onChange={formik.handleChange}
-              value={formik.values.price}
-              data-testid="input-body"
-              isInvalid={formik.touched.price && formik.errors.price}
-            /> */}
             <Form.Select
               size="s"
               name="type"
@@ -142,21 +149,13 @@ const ModalStudent = () => {
             </Form.Select>
           </FormGroup>
           <hr />
-          <span>Дата начала и конца обучения</span>
+          <span>Дата начала обучения</span>
           <Form.Group className="my-1">
             <Form.Control
               type="date"
               name="startLessons"
               onChange={formik.handleChange}
               value={formik.values.startLessons}
-            />
-          </Form.Group>
-          <Form.Group className="my-1">
-            <Form.Control
-              type="date"
-              name="finishLessons"
-              onChange={formik.handleChange}
-              value={formik.values.finishLessons}
             />
           </Form.Group>
           <hr />

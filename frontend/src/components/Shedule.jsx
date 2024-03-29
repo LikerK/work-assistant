@@ -9,38 +9,36 @@ import { Button } from 'react-bootstrap';
 const Scedule = () => {
   const lessons = useSelector(selectors.selectAll);
   const date = new Date();
-
+  const lessonsToday = lessons.filter(lesson => {
+    const lessonDate = new Date(lesson.lessonDate);
+    return lessonDate.getDate() === date.getDate() && lessonDate.getMonth() === date.getMonth();
+  });
   const copyText = (text) => {
     navigator.clipboard.writeText(text);
   };
 
-  const lessonsToday = lessons.length !== 0 ? lessons.filter((lesson) => {
-    const lessonToday = new Date(lesson.lessonDate);
-    return lessonToday.getDate() === date.getDate() && lessonToday.getMonth() === date.getMonth();
-  }) : [];
-
   return (
     <>
-      <div className="lessons">
-        <h3 className='my-2'>Сегодня</h3>
+      <div className="lessons bg-light border border-light h-100 my-3 rounded p-3">
+        <h4>Сегодня</h4>
+        <hr />
         {lessonsToday.map((lesson) => {
           // const day = lesson.lessonDate.slice(8, 11);
           const time = lesson.lessonDate.slice(16, 21);
-          const lessonClass = cn('bg-light', 'p-2', 'my-2', 'd-flex', 'flex-column', 'border', 'rounded', {
-            'border-danger': lesson.passed,
-            'border-success': !lesson.passed
+          const lessonClass = cn('p-2', 'm-1', 'd-flex', 'flex-column', 'border', 'rounded', {
+            'bg-pass': !lesson.passed,
+            'bg-pass': lesson.passed
           });
 
           return (
             <div key={lesson.id} className={lessonClass}>
-              <span className="my-1"> Имя: {lesson.studentName}</span>
-              <span>Время: {time}</span>
+              <span className="my-1 fw-bold">{lesson.name}</span>
+              <span>{time}</span>
             </div>
           );
         })}
       </div>
       <div className="copypasta">
-        <h3>Copypasta</h3>
         <Alert className="p-0" variant="light">
           <Button
             variant="light"
