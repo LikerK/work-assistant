@@ -17,7 +17,6 @@ const getSchedule = (student, lastId) => {
     daysObj[lesson.day] = lesson.time;
   });
   const days = Object.keys(daysObj);
-  console.log(days);
   const countLessons = { 'group': 32, 'absentia': 64, 'one': 1 }
   const dateObj1 = new Date(startLessons);
   while (result.length !== countLessons[type]) {
@@ -27,11 +26,10 @@ const getSchedule = (student, lastId) => {
         console.log(hour, minute);
         newDate.setHours(hour, minute);
         lastId += 1;
-        const id = lastId.toString()
         result.push({ 
-          id: id,
           name: name,
           price: price,
+          type: type,
           lessonDate: newDate.toString(),
           passed: true 
         });
