@@ -19,9 +19,9 @@ const Main = () => {
   useEffect(() => {
     const starCountRef = ref(db, 'users/' + auth.user.uid);
     onValue(starCountRef, (snapshot) => {
-      const students = snapshot.val();
+      const students = snapshot.val() ?? [];
       const keys = Object.keys(students);
-      console.log(students);
+      console.log(keys);
       keys.forEach(name => {
         students[name].id = _.uniqueId();
         students[name].name = name;
