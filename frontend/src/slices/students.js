@@ -9,6 +9,12 @@ const studentsSlice =  createSlice({
   reducers: {
     addStudent: studentsAdapter.addOne,
     addStudents: studentsAdapter.addMany,
+    setStudents: (state, { payload }) => {
+      state.entities = {};
+      studentsAdapter.removeAll(state);
+      studentsAdapter.addMany(state, payload);
+    },
+    setLastId: (state, { payload }) => ({ ...state, lastId: payload }),
   }
 });
 

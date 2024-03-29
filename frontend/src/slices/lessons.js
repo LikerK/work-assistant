@@ -9,7 +9,6 @@ const lessonsSlice =  createSlice({
   reducers: {
     addLesson: lessonsAdapter.addOne,
     addLessons: lessonsAdapter.addMany,
-    setLastId: (state, { payload }) => ({ ...state, lastId: payload }),
   }
 });
 
