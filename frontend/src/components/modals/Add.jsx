@@ -72,26 +72,31 @@ const ModalStudent = () => {
       name: '',
       startLessons: '',
       price: '',
+      link: '',
+      type: 'absentia',
       lessons: [{ id: 0, time: '', day: '', minutes: '', hours: '', type: '' }],
     },
     validationSchema,
     validateOnChange: false,
     onSubmit: (values) => {
       try {
-        const lessonsRef = ref(db, `users/${auth.user.uid}/${values.name}/lessons`);
+        const userRef = ref(db, `users/${auth.user.uid}`);
+        const newStudentRef = push(userRef);
+        set(newStudentRef, { id: newStudentRef.key, name: values.name });
         const lessonsArray = getSchedule(values, lastId);
         const lessons = lessonsArray.map((lesson) => {
-          const newLessonRef = push(lessonsRef);
+          const newLessonRef = push(newStudentRef);
           const newLesson = {
             id: newLessonRef.key,
             lessonDate: lesson.lessonDate,
             name: values.name,
             price: '',
-            passed: true
+            link: lesson.link,
+            type: values.type
           };
-          set(newLessonRef, newLesson);
           return newLesson;
         });
+        set(ref(db, `users/${auth.user.uid}/${newStudentRef.key}/lessons`), lessons);
         const student = { id:_.uniqueId(), name: values.name, lessons: lessons };
         dispatch(studentsActions.addStudent(student));
         dispatch(lessonsActions.addLessons(lessons));
@@ -132,6 +137,18 @@ const ModalStudent = () => {
               value={formik.values.name}
               data-testid="input-body"
               isInvalid={formik.touched.name && formik.errors.name}
+            />
+          </FormGroup>
+          <FormGroup className="my-1">
+            <Form.Label htmlFor="name">Ссылка</Form.Label>
+            <FormControl
+              ref={inputElement}
+              id="link"
+              name="link"
+              type="text"
+              onChange={formik.handleChange}
+              value={formik.values.link}
+              data-testid="input-body"
             />
           </FormGroup>
           <FormGroup className="my-1">

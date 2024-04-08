@@ -23,8 +23,7 @@ const Main = () => {
       const keys = Object.keys(students);
       console.log(keys);
       keys.forEach(name => {
-        students[name].id = _.uniqueId();
-        students[name].name = name;
+        console.log(students);
         dispatch(lessonsActions.addLessons(students[name].lessons));
       });
       dispatch(studentsActions.setStudents(students));

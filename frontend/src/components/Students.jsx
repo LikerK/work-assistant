@@ -11,8 +11,8 @@ const Students = () => {
   console.log(students);
   const setShowModal = (type, item = null) => dispatch(showModal({ type, item }));
   return (
-    <div className="d-flex flex-column justify-content-between h-100 my-3 rounded bg-light">
-      <div>
+    <div className="d-flex flex-column justify-content-between my-3 rounded bg-light">
+      <div className='overflow-auto'>
         {students.map((student) => {
           return (
             <div key={student.id} className="d-flex justify-content-between border rounded p-2 m-2">

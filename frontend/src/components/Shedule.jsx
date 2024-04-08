@@ -3,6 +3,7 @@ import cn from 'classnames';
 import Alert from 'react-bootstrap/Alert';
 import { selectors } from '../slices/lessons';
 import { ReactComponent as CopyIcon } from '../assets/copy.svg';
+import { ReactComponent as LinkIcon } from '../assets/link.svg';
 import { useEffect } from 'react';
 import { Button } from 'react-bootstrap';
 
@@ -12,6 +13,19 @@ const Scedule = () => {
   const lessonsToday = lessons.filter(lesson => {
     const lessonDate = new Date(lesson.lessonDate);
     return lessonDate.getDate() === date.getDate() && lessonDate.getMonth() === date.getMonth();
+  });
+
+  lessonsToday.sort((a, b) => {
+    const date1 = new Date(a.lessonDate);
+    const date2 = new Date(b.lessonDate);
+
+    if (date1.getTime() > date2.getTime()) {
+      return 1;
+    }
+    if (date1.getTime() < date2.getTime()) {
+      return -1;
+    }
+    return 0;
   });
   const copyText = (text) => {
     navigator.clipboard.writeText(text);
@@ -24,16 +38,30 @@ const Scedule = () => {
         <hr />
         {lessonsToday.map((lesson) => {
           // const day = lesson.lessonDate.slice(8, 11);
+          const isCompleted = date.getTime() > new Date(lesson.lessonDate).getTime();
+          console.log(isCompleted);
           const time = lesson.lessonDate.slice(16, 21);
-          const lessonClass = cn('p-2', 'm-1', 'd-flex', 'flex-column', 'border', 'rounded', {
-            'bg-pass': !lesson.passed,
-            'bg-pass': lesson.passed
-          });
+          const lessonClass = cn(
+            'p-2',
+            'm-1',
+            'd-flex',
+            'justify-content-between',
+            'align-items-center',
+            'border',
+            'rounded',
+            isCompleted ? ['bg-light', 'text-muted'] : ['bg-pass', 'fw-bold'],
+          );
 
           return (
             <div key={lesson.id} className={lessonClass}>
-              <span className="my-1 fw-bold">{lesson.name}</span>
-              <span>{time}</span>
+              <div className='d-flex align-items-center'>
+                <span className='m-1'>{time}</span>
+                <span>|</span>
+                <span className="m-1">{lesson.name}</span>
+              </div>
+              <a href={lesson.link}>
+                <LinkIcon />
+              </a>
             </div>
           );
         })}
@@ -67,6 +95,7 @@ const Scedule = () => {
         </Alert>
       </div>
     </>
-)};
+  )
+};
 
 export default Scedule;
