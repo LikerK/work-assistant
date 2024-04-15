@@ -1,6 +1,7 @@
 import { useSelector } from 'react-redux';
 import { selectors } from '../slices/lessons';
 import { useState } from 'react';
+import _ from 'lodash';
 
 const Salary = () => {
   const lessons = useSelector(selectors.selectAll);
@@ -24,21 +25,29 @@ const Salary = () => {
     }
     return 0;
   });
+  const getSalaryForWeek = (week) => {
+    const absentias = week.filter(lesson => lesson.type === 'absentia');
+    const groups = week.filter(lesson => lesson.type === 'group');
+    const masterClass = week.filter(lesson => lesson.type === 'one');
+    return absentias.length * 420 + groups.length * 750 + masterClass.length * 400;
+  }
   const weeks = [];
   let week = [];
   lessonsMonth.forEach((lesson) => {
     if (new Date(lesson.lessonDate).getDay() === 1 && week.length !== 0) {
       if (new Date(week[week.length - 1].lessonDate).getDay() === 0) {
-        weeks.push(week);
+        weeks.push(getSalaryForWeek(week));
         week = [];
       }
     };
     week.push(lesson);
   });
-  weeks.push(week);
-  console.log(weeks);
-  return <span>{salary}</span>
-
+  weeks.push(getSalaryForWeek(week));
+  return (
+    <div className='bg-light h-auto rounded m-2'>
+      <span className='p-2'>Общая зарплата за месяц: {_.sum(weeks)}</span>
+    </div>
+  )
 }
 
 export default Salary;
