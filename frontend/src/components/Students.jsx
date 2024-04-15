@@ -4,6 +4,7 @@ import { showModal } from '../slices/modals';
 import { ReactComponent as ChildIcon } from '../assets/child-icon.svg';
 import ModalStudent from './Modal.jsx'
 import { selectors } from '../slices/students';
+import '../index.css';
 
 const Students = () => {
   const dispatch = useDispatch();
@@ -11,33 +12,40 @@ const Students = () => {
   console.log(students);
   const setShowModal = (type, item = null) => dispatch(showModal({ type, item }));
   return (
-    <div className="d-flex flex-column justify-content-between my-3 rounded bg-light">
-      <div className='overflow-auto'>
-        {students.map((student) => {
-          return (
-            <div key={student.id} className="d-flex justify-content-between border rounded p-2 m-2">
-              <div>
-                <ChildIcon className="m-1" />
-                <span className='text-bold'>{student.name}</span>
-              </div>
+    <div className="students my-3 overflow-auto rounded bg-light">
+      <Button
+        variant="light"
+        type="button"
+        className="border m-2 border-2"
+        onClick={() => setShowModal('adding')}
+      >
+        <span>Добавить группу</span>
+      </Button>
+      {students.map((student) => {
+        return (
+          <div key={student.id} className="d-flex justify-content-between border rounded p-2 m-2">
+            <div>
+              <ChildIcon className="m-1" />
+              <span className='text-bold'>{student.name}</span>
+            </div>
+            <div>
               <Button
                 variant='light'
                 className='border'
               >
                 Open
               </Button>
+              <Button
+                onClick={() => setShowModal('delete', student.id)}
+                variant='light'
+                className='border'
+              >
+                Delete
+              </Button>
             </div>
-          )
-        })}
-      </div>
-      <Button
-        variant="light"
-        type="button"
-        className="m-2 border border-2"
-        onClick={() => setShowModal('adding')}
-      >
-        <span>Добавить группу</span>
-      </Button>
+          </div>
+        )
+      })}
       <ModalStudent />
     </div>
   );

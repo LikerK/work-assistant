@@ -47,20 +47,14 @@ const SignUpPage = () => {
       setSignUpError(false);
       createUserWithEmailAndPassword(auth, username, password)
         .then((userCredential) => {
-          // Signed up 
           const user = userCredential.user;
           authHook.logIn(user);
           navigation('/');
-          // ...
         })
         .catch((error) => {
-          const errorCode = error.code;
           const errorMessage = error.message;
           console.log(errorMessage);
-          // ..
         });
-
-
     },
   });
   return (

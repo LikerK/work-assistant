@@ -19,3 +19,7 @@ code {
 .main {
   background: linear-gradient(135deg, rgba(2,0,36,1) 0%, rgba(95,200,255,1) 0%, rgba(241,139,139,0.4345686028317577) 100%);
 }
+
+.students {
+  max-height: 95%;
+}

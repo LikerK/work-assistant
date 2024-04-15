@@ -4,10 +4,9 @@ import {
 import React, { useState, useRef } from 'react';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
-import { useDispatch, useSelector } from 'react-redux';
-import { ref, set, push, getDatabase, update, on } from "firebase/database";
+import { useDispatch } from 'react-redux';
+import { ref, set, push } from "firebase/database";
 import { useAuth } from '../../hooks/index.js';
-import { useBd } from '../../hooks/index.js';
 import { actions as studentsActions } from '../../slices/students';
 import { actions as lessonsActions } from '../../slices/lessons';
 import { closeModal } from '../../slices/modals';
@@ -55,7 +54,6 @@ const ModalStudent = () => {
   const [countLessons, setCountLessons] = useState(1);
   const arrayLessons = [...Array(countLessons).keys()];
   const dispatch = useDispatch();
-  const lastId = 0;
   const setCloseModal = () => dispatch(closeModal());
 
   const inputElement = useRef();
@@ -71,7 +69,6 @@ const ModalStudent = () => {
     initialValues: {
       name: '',
       startLessons: '',
-      price: '',
       link: '',
       type: 'absentia',
       lessons: [{ id: 0, time: '', day: '', minutes: '', hours: '', type: '' }],
@@ -83,7 +80,7 @@ const ModalStudent = () => {
         const userRef = ref(db, `users/${auth.user.uid}`);
         const newStudentRef = push(userRef);
         set(newStudentRef, { id: newStudentRef.key, name: values.name });
-        const lessonsArray = getSchedule(values, lastId);
+        const lessonsArray = getSchedule(values);
         const lessons = lessonsArray.map((lesson) => {
           const newLessonRef = push(newStudentRef);
           const newLesson = {

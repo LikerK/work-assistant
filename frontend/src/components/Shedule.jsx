@@ -4,7 +4,6 @@ import Alert from 'react-bootstrap/Alert';
 import { selectors } from '../slices/lessons';
 import { ReactComponent as CopyIcon } from '../assets/copy.svg';
 import { ReactComponent as LinkIcon } from '../assets/link.svg';
-import { useEffect } from 'react';
 import { Button } from 'react-bootstrap';
 
 const Scedule = () => {
@@ -32,8 +31,8 @@ const Scedule = () => {
   };
 
   return (
-    <>
-      <div className="lessons bg-light border border-light h-100 my-3 rounded p-3">
+    <div className='h-100 d-flex flex-column justify-content-between'>
+      <div className="h-100 bg-light border border-light my-3 rounded p-3">
         <h4>Сегодня</h4>
         <hr />
         {lessonsToday.map((lesson) => {
@@ -94,7 +93,7 @@ const Scedule = () => {
           </Button>
         </Alert>
       </div>
-    </>
+    </div>
   )
 };
 

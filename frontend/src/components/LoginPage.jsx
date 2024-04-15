@@ -30,14 +30,11 @@ const PageLogin = () => {
       setAuthFailed(false);
       signInWithEmailAndPassword(auth, username, password)
         .then((userCredential) => {
-          // Signed in 
           const user = userCredential.user;
           authHook.logIn(user);
           navigation('/');
-          // ...
         })
         .catch((error) => {
-          const errorCode = error.code;
           const errorMessage = error.message;
           console.log(errorMessage);
         });
@@ -90,7 +87,7 @@ const PageLogin = () => {
             <Card.Footer className="p-4">
               <div className="text-center">
                 <span>No account?</span>
-                {' '}
+                {' -> '}
                 <Link to="/signup">Register</Link>
               </div>
             </Card.Footer>
