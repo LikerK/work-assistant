@@ -9,6 +9,8 @@ const lessonsSlice =  createSlice({
   reducers: {
     addLesson: lessonsAdapter.addOne,
     addLessons: lessonsAdapter.addMany,
+    removeLessons: lessonsAdapter.removeMany,
+    removeLesson: lessonsAdapter.removeOne
   }
 });
 
