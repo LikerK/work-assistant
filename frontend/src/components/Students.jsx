@@ -36,7 +36,7 @@ const Students = () => {
                 Open
               </Button>
               <Button
-                onClick={() => setShowModal('delete', student.id)}
+                onClick={() => setShowModal('delete', student)}
                 variant='light'
                 className='border'
               >

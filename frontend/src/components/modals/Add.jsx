@@ -12,7 +12,6 @@ import { actions as lessonsActions } from '../../slices/lessons';
 import { closeModal } from '../../slices/modals';
 import getSchedule from '../../util.js';
 import { db } from '../../firebase.js';
-import _  from 'lodash';
 
 const AddLessonForm = ({ formik, id }) => {
   return (
@@ -94,7 +93,7 @@ const ModalStudent = () => {
           return newLesson;
         });
         set(ref(db, `users/${auth.user.uid}/${newStudentRef.key}/lessons`), lessons);
-        const student = { id:_.uniqueId(), name: values.name, lessons: lessons };
+        const student = { id:newStudentRef.key, name: values.name, lessons: lessons };
         dispatch(studentsActions.addStudent(student));
         dispatch(lessonsActions.addLessons(lessons));
       }

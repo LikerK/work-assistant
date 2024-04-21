@@ -20,9 +20,7 @@ const Main = () => {
     onValue(starCountRef, (snapshot) => {
       const students = snapshot.val() ?? [];
       const keys = Object.keys(students);
-      console.log(keys);
       keys.forEach(name => {
-        console.log(students);
         dispatch(lessonsActions.addLessons(students[name].lessons));
       });
       dispatch(studentsActions.setStudents(students));

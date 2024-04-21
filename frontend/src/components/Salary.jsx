@@ -1,13 +1,11 @@
 import { useSelector } from 'react-redux';
 import { selectors } from '../slices/lessons';
-import { useState } from 'react';
 import _ from 'lodash';
 
 const Salary = () => {
   const lessons = useSelector(selectors.selectAll);
   const date = new Date();
   const monthName = date.toLocaleString('default', { month: 'long' });
-  const [salary, setSalary] = useState(0);
   const lessonsMonth = lessons.filter((lesson) => {
     const lessonDate = new Date(lesson.lessonDate);
     const lessonMonth = lessonDate.toLocaleString('default', { month: 'long' });
