@@ -7,15 +7,20 @@ import { ref, set } from "firebase/database";
 import { useSelector, useDispatch } from 'react-redux';
 import { useAuth } from '../../hooks/index.js';
 import { closeModal } from '../../slices/modals';
+import { actions as studentsActions } from '../../slices/students';
+import { actions as lessonsActions } from '../../slices/lessons';
 
 const Delete = () => {
   const dispatch = useDispatch();
   const auth = useAuth();
   const setCloseModal = () => dispatch(closeModal());
-  const item = useSelector(({ modalsSlice }) => modalsSlice.item);
+  const student = useSelector(({ modalsSlice }) => modalsSlice.item);
   const deleteGroup = () => {
-    const studentRef = ref(db, `users/${auth.user.uid}/${item}`);
+    console.log(student);
+    const studentRef = ref(db, `users/${auth.user.uid}/${student.id}`);
     set(studentRef, null);
+    dispatch(studentsActions.removeStudent(student));
+    dispatch(lessonsActions.removeLessons(student.lessons));
     setCloseModal();
   };
 
