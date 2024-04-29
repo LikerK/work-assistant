@@ -4,13 +4,12 @@ import { showModal } from '../slices/modals';
 import { ReactComponent as ChildIcon } from '../assets/child-icon.svg';
 import ModalStudent from './Modal.jsx'
 import { selectors } from '../slices/students';
-import '../index.css';
 
 const Students = () => {
   const dispatch = useDispatch();
   const students = useSelector(selectors.selectAll);
   console.log(students);
-  const setShowModal = (type, item = null) => dispatch(showModal({ type, item }));
+  const setShowModal = (type, item = null, typeItem = null) => dispatch(showModal({ type, item, typeItem }));
   return (
     <div className="students my-3 overflow-auto rounded bg-light">
       <Button
@@ -30,13 +29,14 @@ const Students = () => {
             </div>
             <div>
               <Button
+                onClick={() => setShowModal('student', student)}
                 variant='light'
-                className='border'
+                className='border mx-1'
               >
                 Open
               </Button>
               <Button
-                onClick={() => setShowModal('delete', student)}
+                onClick={() => setShowModal('delete', student, 'student')}
                 variant='light'
                 className='border'
               >

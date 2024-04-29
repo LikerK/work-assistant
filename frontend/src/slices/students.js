@@ -10,11 +10,7 @@ const studentsSlice =  createSlice({
     addStudent: studentsAdapter.addOne,
     addStudents: studentsAdapter.addMany,
     removeStudent: studentsAdapter.removeOne,
-    setStudents: (state, { payload }) => {
-      state.entities = {};
-      studentsAdapter.removeAll(state);
-      studentsAdapter.addMany(state, payload);
-    },
+    setStudent: studentsAdapter.setOne,
     setLastId: (state, { payload }) => ({ ...state, lastId: payload }),
   }
 });
