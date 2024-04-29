@@ -10,7 +10,8 @@ const lessonsSlice =  createSlice({
     addLesson: lessonsAdapter.addOne,
     addLessons: lessonsAdapter.addMany,
     removeLessons: lessonsAdapter.removeMany,
-    removeLesson: lessonsAdapter.removeOne
+    removeLesson: lessonsAdapter.removeOne,
+    setLessons: lessonsAdapter.setMany,
   }
 });
 

@@ -8,6 +8,7 @@ import { actions as lessonsActions } from '../slices/lessons';
 import Scedule from './Shedule.jsx';
 import Salary from './Salary';
 import Students from './Students';
+import '../index.css';
 
 
 const Main = () => {
@@ -23,7 +24,7 @@ const Main = () => {
       keys.forEach(name => {
         dispatch(lessonsActions.addLessons(students[name].lessons));
       });
-      dispatch(studentsActions.setStudents(students));
+      dispatch(studentsActions.addStudents(students));
     }, { onlyOnce: true });
   }, [auth.user.uid, dispatch]);
   

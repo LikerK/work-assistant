@@ -10,9 +10,10 @@ import Main from './Main.jsx';
 import LoginPage from './LoginPage.jsx';
 import SignUp from './SignUpPage.jsx';
 import AuthProvider from '../contexts/AuthProvider.jsx';
+import ApiProvider from '../contexts/ApiProvider.jsx';
 import { useAuth } from '../hooks/index.js';
 
-const PrivateRoute = ( { children } ) => {
+const PrivateRoute = ({ children }) => {
   const auth = useAuth();
   const location = useLocation();
   return (
@@ -23,22 +24,24 @@ const PrivateRoute = ( { children } ) => {
 const App = () => {
   return (
     <AuthProvider>
-      <BrowserRouter>
-        <div className="main h-100 d-flex flex-column">
-          <NavbarMenu />
-          <Routes>
-            <Route
-              path='/'
-              element={(
-                <PrivateRoute>
-                  <Main />
-                </PrivateRoute>
-              )} />
-            <Route path='login' element={<LoginPage />} />
-            <Route path='signup' element={<SignUp />} />
-          </Routes>
-        </div>
-      </BrowserRouter>
+      <ApiProvider>
+        <BrowserRouter>
+          <div className="main h-100 d-flex flex-column">
+            <NavbarMenu />
+            <Routes>
+              <Route
+                path='/'
+                element={(
+                  <PrivateRoute>
+                    <Main />
+                  </PrivateRoute>
+                )} />
+              <Route path='login' element={<LoginPage />} />
+              <Route path='signup' element={<SignUp />} />
+            </Routes>
+          </div>
+        </BrowserRouter>
+      </ApiProvider>
     </AuthProvider>
   )
 };
