@@ -1,4 +1,4 @@
 import { createContext } from 'react';
 
 export const AuthContext = createContext({});
-export const BdContext = createContext({});
+export const ApiContext = createContext({});
